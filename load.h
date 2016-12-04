@@ -1,6 +1,7 @@
-#ifndef _load_h 
+#ifndef _load_h
 #define _load_h
 
+#include "util.h"
 #include <stdio.h>
 
 /**
@@ -17,11 +18,10 @@ load_board (FILE* input, int* nrows, int* ncols);
  * ncols.  The board is initialized to contain nonsense values, which
  * may be useful for debugging.
  */
-char*
+elementNode_t*
 make_board (const int nrows, const int ncols);
 
-
-
-
+// Helper function to notify all neighbours about a cell that's alive
+void init_neighbour_cnts (elementNode_t * board, const int nrows, const int ncols);
 
 #endif /* _load_h */

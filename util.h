@@ -2,13 +2,46 @@
 #define _util_h
 
 /**
+ * Swapping the two boards only involves swapping pointers, not
+ * copying values.
+ */
+#define SWAP_BOARDS( b1, b2 )  do { \
+  char* temp = b1; \
+  b1 = b2; \
+  b2 = temp; \
+} while(0)
+
+//#define BOARD( __board, __i, __j )  (__board[(__i) + LDA*(__j)])
+#define BOARD( __board, __i, __j )  (__board[(__i) + (__j)])
+
+// Check if a cell is alive or dead
+#define IS_ALIVE(var) ((var) & (1<<(4)))
+
+// Set cell states in the bit representation of cells
+#define SET_ALIVE(var)  (var |=  (1 << (4)))
+#define SET_DEAD(var)  (var &= ~(1 << (4)))
+
+// Increase or decrease neighbour counts in the bit representation of cells
+#define INCREMENT_NEIGHBOURS(__board, __i, __j )  (__board[(__i) + (__j)] ++ )
+#define DECREMENT_NEIGHBOURS(__board, __i, __j )  (__board[(__i) + (__j)] -- )
+
+typedef union {
+    struct {
+        unsigned char neighborCnt: 4;
+        unsigned char isAlive: 1;
+        unsigned char is_static: 3;
+    };
+    char value;
+} elementNode_t;
+
+/**
  * C's mod ('%') operator is mathematically correct, but it may return
  * a negative remainder even when both inputs are nonnegative.  This
  * function always returns a nonnegative remainder (x mod m), as long
  * as x and m are both positive.  This is helpful for computing
  * toroidal boundary conditions.
  */
-static inline int 
+static inline int
 mod (int x, int m)
 {
   return (x < 0) ? ((x % m) + m) : (x % m);
